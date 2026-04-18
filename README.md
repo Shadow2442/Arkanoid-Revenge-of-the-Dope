@@ -2,6 +2,20 @@
 
 A browser-based Arkanoid tribute project with custom arcade presentation, title video support, soundtrack playback, multiple stages, a Doh-style boss, and local project rules tracked in [`AGENTS.md`](./AGENTS.md).
 
+## Play Online
+
+Play the current GitHub Pages build here:
+
+[Play Arkanoid: Revenge of the Dope](https://shadow2442.github.io/Arkanoid-Revenge-of-the-Dope/)
+
+## Highlights
+
+- Playable browser build with arcade-style presentation
+- Three handcrafted stages plus a Doh-inspired boss encounter
+- Custom title video, soundtrack support, and retro UI effects
+- Mouse and keyboard controls
+- GitHub Pages deployment from the `website/` folder via Actions
+
 ## Project Structure
 
 - `website/`
@@ -24,11 +38,10 @@ If you want a quick local launcher in Chrome, use:
 
 ## Publishing Notes
 
-- The playable site currently lives inside `website/`
-- If this project is published to GitHub Pages later, verify whether Pages should serve from:
-  - the repo root, or
-  - the `website/` folder
-- Before publishing, verify asset paths, audio/video references, and title-screen behavior
+- The playable GitHub Pages site is live at:
+  - [https://shadow2442.github.io/Arkanoid-Revenge-of-the-Dope/](https://shadow2442.github.io/Arkanoid-Revenge-of-the-Dope/)
+- The live build files are published from the `website/` folder through GitHub Actions
+- Before future publishing changes, verify asset paths, audio/video references, and title-screen behavior
 
 ## Current Runtime Assets
 
