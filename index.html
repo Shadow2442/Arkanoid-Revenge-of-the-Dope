@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arkanoid: Revenge of the Dope</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="cabinet">
+      <div class="screen-bezel">
+        <header class="topbar">
+          <div class="title-block">
+            <p class="eyebrow">TAITO Tribute Build</p>
+            <h1>ARKANOID: REVENGE OF THE DOPE</h1>
+            <div class="controls controls-inline">
+              <span>Move: A / D or Arrow Keys</span>
+              <span>Launch / Confirm: Space</span>
+              <span>Laser: F / Left Click</span>
+              <span>Pause: P / Exit: Esc</span>
+            </div>
+          </div>
+          <button id="sound-toggle" class="sound-toggle" type="button" aria-label="Sound off" title="Toggle sound">🔇</button>
+        </header>
+
+        <div class="playfield-wrap">
+          <canvas id="game" width="960" height="720" aria-label="Arkanoid tribute game"></canvas>
+          <video id="title-video" preload="auto" muted loop playsinline hidden aria-hidden="true">
+            <source src="./assets/video/title-screen.mp4" type="video/mp4" />
+          </video>
+          <div id="title-start-overlay" class="title-start-overlay" aria-hidden="true">
+            <span>START GAME</span>
+          </div>
+          <div class="scanlines"></div>
+        </div>
+
+        <footer class="status-bar">
+          <span>Offline-ready</span>
+          <span>Three handcrafted stages + Doh + bonus generator</span>
+          <span>Seeded runs and CRT glow included</span>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <script src="./game.js"></script>
+</body>
+</html>
