@@ -25,10 +25,20 @@ const STATES = {
   LEVEL_CLEAR: "level_clear",
   GAME_OVER: "game_over",
   WIN: "win",
+  NAME_ENTRY: "name_entry",
   PAUSED: "paused",
   CONFIRM_EXIT: "confirm_exit",
   ATTRACT: "attract",
 };
+
+const HIGH_SCORE_STORAGE_KEY = "arkanoid-revenge-of-the-dope-highscores";
+const DEFAULT_HIGH_SCORES = [
+  { name: "AAA", score: 100000 },
+  { name: "SLM", score: 85000 },
+  { name: "CPU", score: 60000 },
+  { name: "VAU", score: 45000 },
+  { name: "DOH", score: 20000 },
+];
 
 const POWERUP_TYPES = ["E", "S", "C", "L", "D", "P"];
 
@@ -906,6 +916,11 @@ class Game {
     this.bonusStageUnlocked = false;
     this.bonusStageComplete = false;
     this.retroSeedLabel = `SEED-${this.rng.seed}`;
+    this.highScores = this.loadHighScores();
+    this.pendingHighScoreEntry = null;
+    this.highScoreEntryName = ["A", "A", "A"];
+    this.highScoreEntryIndex = 0;
+    this.postEntryState = STATES.GAME_OVER;
     this.currentEnemyRate = 999999;
     this.score = 0;
     this.lives = 3;
@@ -933,6 +948,11 @@ class Game {
     window.addEventListener("keydown", (event) => {
       const key = event.key.toLowerCase();
       this.registerActivity();
+      if (this.state === STATES.NAME_ENTRY) {
+        if (this.handleHighScoreEntryKey(event)) {
+          return;
+        }
+      }
       if (key === "arrowleft" || key === "a") this.input.left = true;
       if (key === "arrowright" || key === "d") this.input.right = true;
 
@@ -1078,6 +1098,109 @@ class Game {
       this.titleVideoActive = false;
     });
     markReady();
+  }
+
+  loadHighScores() {
+    try {
+      const saved = window.localStorage.getItem(HIGH_SCORE_STORAGE_KEY);
+      if (!saved) {
+        return DEFAULT_HIGH_SCORES.map((entry) => ({ ...entry }));
+      }
+      const parsed = JSON.parse(saved);
+      if (!Array.isArray(parsed)) {
+        return DEFAULT_HIGH_SCORES.map((entry) => ({ ...entry }));
+      }
+      const sanitized = parsed
+        .map((entry) => ({
+          name: String(entry?.name || "AAA").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 3).padEnd(3, "A"),
+          score: Math.max(0, Number(entry?.score) || 0),
+        }))
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 5);
+      if (sanitized.length === 0) {
+        return DEFAULT_HIGH_SCORES.map((entry) => ({ ...entry }));
+      }
+      while (sanitized.length < 5) {
+        sanitized.push({ ...DEFAULT_HIGH_SCORES[sanitized.length] });
+      }
+      return sanitized;
+    } catch (_error) {
+      return DEFAULT_HIGH_SCORES.map((entry) => ({ ...entry }));
+    }
+  }
+
+  saveHighScores() {
+    try {
+      window.localStorage.setItem(HIGH_SCORE_STORAGE_KEY, JSON.stringify(this.highScores.slice(0, 5)));
+    } catch (_error) {
+      // Ignore storage failures and keep the in-memory table alive.
+    }
+  }
+
+  getTopScore() {
+    return this.highScores[0]?.score || 0;
+  }
+
+  qualifiesForHighScore(score = this.score) {
+    return score >= (this.highScores[this.highScores.length - 1]?.score || 0);
+  }
+
+  beginHighScoreEntry(finalState) {
+    this.pendingHighScoreEntry = { score: this.score };
+    this.highScoreEntryName = ["A", "A", "A"];
+    this.highScoreEntryIndex = 0;
+    this.postEntryState = finalState;
+    this.state = STATES.NAME_ENTRY;
+    this.message = "";
+    this.messageTimer = 0;
+  }
+
+  finalizeHighScoreEntry() {
+    if (!this.pendingHighScoreEntry) return;
+    const name = this.highScoreEntryName.join("");
+    this.highScores.push({ name, score: this.pendingHighScoreEntry.score });
+    this.highScores = this.highScores
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5);
+    this.saveHighScores();
+    this.pendingHighScoreEntry = null;
+    this.state = this.postEntryState;
+  }
+
+  handleHighScoreEntryKey(event) {
+    const key = event.key;
+    if (key === "Enter" || key === " ") {
+      event.preventDefault();
+      this.finalizeHighScoreEntry();
+      return true;
+    }
+    if (key === "Backspace") {
+      event.preventDefault();
+      this.highScoreEntryName[this.highScoreEntryIndex] = "A";
+      if (this.highScoreEntryIndex > 0) {
+        this.highScoreEntryIndex -= 1;
+      }
+      return true;
+    }
+    if (key === "ArrowLeft") {
+      event.preventDefault();
+      this.highScoreEntryIndex = Math.max(0, this.highScoreEntryIndex - 1);
+      return true;
+    }
+    if (key === "ArrowRight") {
+      event.preventDefault();
+      this.highScoreEntryIndex = Math.min(2, this.highScoreEntryIndex + 1);
+      return true;
+    }
+    if (/^[a-z0-9]$/i.test(key)) {
+      event.preventDefault();
+      this.highScoreEntryName[this.highScoreEntryIndex] = key.toUpperCase();
+      if (this.highScoreEntryIndex < 2) {
+        this.highScoreEntryIndex += 1;
+      }
+      return true;
+    }
+    return false;
   }
 
   syncTitleVideoPlayback(shouldPlay) {
@@ -1343,6 +1466,10 @@ class Game {
       this.startGame();
       return;
     }
+    if (this.state === STATES.NAME_ENTRY) {
+      this.finalizeHighScoreEntry();
+      return;
+    }
     if (this.state === STATES.CONFIRM_EXIT) {
       if (this.confirmExitSelection === 0) {
         this.audio.stopMusic();
@@ -1371,6 +1498,7 @@ class Game {
   }
 
   handleEscape() {
+    if (this.state === STATES.NAME_ENTRY) return;
     if (this.state === STATES.MENU) return;
     if (this.state === STATES.CONFIRM_EXIT) {
       this.confirmExitHover = null;
@@ -1447,7 +1575,11 @@ class Game {
     this.paddle = new Paddle(this);
     this.resetBalls();
     if (this.lives <= 0) {
-      this.state = STATES.GAME_OVER;
+      if (this.qualifiesForHighScore()) {
+        this.beginHighScoreEntry(STATES.GAME_OVER);
+      } else {
+        this.state = STATES.GAME_OVER;
+      }
     } else {
       this.message = "VAUS destroyed";
       this.messageTimer = 120;
@@ -1484,8 +1616,12 @@ class Game {
       this.state = STATES.PLAYING;
       this.loadLevel(nextLevel);
     } else if (this.bonusStageUnlocked && !this.bonusStageComplete) {
-      this.state = STATES.WIN;
       this.bonusStageComplete = true;
+      if (this.qualifiesForHighScore()) {
+        this.beginHighScoreEntry(STATES.WIN);
+      } else {
+        this.state = STATES.WIN;
+      }
     } else {
       this.state = STATES.PLAYING;
       this.startBossFight();
@@ -2032,7 +2168,7 @@ class Game {
     ctx.fillStyle = "#ff3030";
     ctx.fillText("HIGH SCORE", 350, 16);
     ctx.fillStyle = "#ffffff";
-    ctx.fillText("100000", 410, 36);
+    ctx.fillText(String(this.getTopScore()).padStart(6, "0"), 410, 36);
 
     ctx.textAlign = "right";
     ctx.font = "bold 14px monospace";
@@ -2105,7 +2241,7 @@ class Game {
     ctx.fillText("HIGH SCORE", WIDTH * 0.5, 24);
     ctx.fillStyle = "#ffffff";
     ctx.fillText("00", WIDTH * 0.24, 48);
-    ctx.fillText("100000", WIDTH * 0.5, 48);
+    ctx.fillText(String(this.getTopScore()).padStart(6, "0"), WIDTH * 0.5, 48);
     const sunset = ctx.createRadialGradient(WIDTH / 2, 170, 10, WIDTH / 2, 170, 240);
     sunset.addColorStop(0, "rgba(255,90,70,0.95)");
     sunset.addColorStop(0.25, "rgba(255,50,70,0.7)");
@@ -2238,20 +2374,13 @@ class Game {
     ctx.font = "bold 28px monospace";
     ctx.fillText("HI-SCORE RANKING", WIDTH / 2, 90);
 
-    const entries = [
-      ["AAA", "100000"],
-      ["TOM", "085000"],
-      ["CPU", "060000"],
-      ["VAU", "045000"],
-      ["DOH", "020000"],
-    ];
     ctx.font = "bold 26px monospace";
-    entries.forEach((entry, index) => {
+    this.highScores.forEach((entry, index) => {
       const y = 180 + index * 70;
       ctx.fillStyle = index === 0 ? "#ffd400" : "#ffffff";
-      ctx.fillText(`${index + 1}. ${entry[0]}`, WIDTH / 2 - 130, y);
+      ctx.fillText(`${index + 1}. ${entry.name}`, WIDTH / 2 - 130, y);
       ctx.fillStyle = "#7ce7ff";
-      ctx.fillText(entry[1], WIDTH / 2 + 120, y);
+      ctx.fillText(String(entry.score).padStart(6, "0"), WIDTH / 2 + 120, y);
     });
 
     ctx.fillStyle = "#6cff92";
@@ -2259,6 +2388,41 @@ class Game {
     ctx.fillText("ARKANOID DEFENSE HONORS", WIDTH / 2, 590);
     ctx.fillStyle = "#ffffff";
     ctx.fillText("PRESS ANY KEY TO RETURN", WIDTH / 2, 650);
+    ctx.restore();
+  }
+
+  drawHighScoreEntryScreen() {
+    ctx.save();
+    ctx.fillStyle = "rgba(0, 0, 0, 0.78)";
+    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#ffd400";
+    ctx.font = "bold 34px monospace";
+    ctx.fillText("NEW HIGH SCORE!", WIDTH / 2, HEIGHT / 2 - 110);
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 24px monospace";
+    ctx.fillText(`SCORE ${String(this.pendingHighScoreEntry?.score || this.score).padStart(6, "0")}`, WIDTH / 2, HEIGHT / 2 - 62);
+    ctx.fillStyle = "#7ce7ff";
+    ctx.font = "bold 22px monospace";
+    ctx.fillText("ENTER YOUR INITIALS", WIDTH / 2, HEIGHT / 2 - 12);
+
+    const baseX = WIDTH / 2 - 84;
+    for (let i = 0; i < 3; i += 1) {
+      const x = baseX + i * 72;
+      const selected = i === this.highScoreEntryIndex;
+      ctx.fillStyle = selected ? "rgba(255, 212, 0, 0.2)" : "rgba(255, 255, 255, 0.08)";
+      ctx.fillRect(x, HEIGHT / 2 + 18, 56, 64);
+      ctx.strokeStyle = selected ? "#ffd400" : "#ffffff";
+      ctx.lineWidth = selected ? 4 : 2;
+      ctx.strokeRect(x, HEIGHT / 2 + 18, 56, 64);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 38px monospace";
+      ctx.fillText(this.highScoreEntryName[i], x + 28, HEIGHT / 2 + 62);
+    }
+
+    ctx.fillStyle = "#9ee7ff";
+    ctx.font = "18px monospace";
+    ctx.fillText("TYPE LETTERS OR NUMBERS, BACKSPACE TO EDIT, ENTER TO SAVE", WIDTH / 2, HEIGHT / 2 + 128);
     ctx.restore();
   }
 
@@ -2348,6 +2512,10 @@ class Game {
 
     if (this.state === STATES.PAUSED) {
       this.drawOverlay("PAUSED", "Press P to continue");
+    }
+
+    if (this.state === STATES.NAME_ENTRY) {
+      this.drawHighScoreEntryScreen();
     }
 
     if (this.state === STATES.CONFIRM_EXIT) {
