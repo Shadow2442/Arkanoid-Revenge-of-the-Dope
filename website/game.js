@@ -32,12 +32,19 @@ const STATES = {
 };
 
 const HIGH_SCORE_STORAGE_KEY = "arkanoid-revenge-of-the-dope-highscores";
-const DEFAULT_HIGH_SCORES = [
+const LEGACY_DEFAULT_HIGH_SCORES = [
   { name: "AAA", score: 100000 },
   { name: "SLM", score: 85000 },
   { name: "CPU", score: 60000 },
   { name: "VAU", score: 45000 },
   { name: "DOH", score: 20000 },
+];
+const DEFAULT_HIGH_SCORES = [
+  { name: "AAA", score: 25000 },
+  { name: "SLM", score: 20000 },
+  { name: "CPU", score: 15000 },
+  { name: "VAU", score: 10000 },
+  { name: "DOH", score: 5000 },
 ];
 
 const POWERUP_TYPES = ["E", "S", "C", "L", "D", "P"];
@@ -1117,6 +1124,14 @@ class Game {
         }))
         .sort((a, b) => b.score - a.score)
         .slice(0, 5);
+      const matchesLegacyDefaults = sanitized.length === LEGACY_DEFAULT_HIGH_SCORES.length &&
+        sanitized.every((entry, index) =>
+          entry.name === LEGACY_DEFAULT_HIGH_SCORES[index].name &&
+          entry.score === LEGACY_DEFAULT_HIGH_SCORES[index].score,
+        );
+      if (matchesLegacyDefaults) {
+        return DEFAULT_HIGH_SCORES.map((entry) => ({ ...entry }));
+      }
       if (sanitized.length === 0) {
         return DEFAULT_HIGH_SCORES.map((entry) => ({ ...entry }));
       }
