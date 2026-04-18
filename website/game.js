@@ -1998,6 +1998,13 @@ class Game {
       return;
     }
 
+    if (this.titleVideo) {
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+      ctx.restore();
+      return;
+    }
+
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
