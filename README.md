@@ -2,6 +2,8 @@
 
 A browser-based Arkanoid tribute project with custom arcade presentation, title video support, soundtrack playback, multiple stages, a Doh-style boss, and local project rules tracked in [`AGENTS.md`](./AGENTS.md).
 
+Tom was an avid Arkanoid fan in the arcade days, and with modern AI tools in reach, he set himself a fun challenge: create a fully working Arkanoid tribute with multiple levels, a title screen, music, and real playable flow in about 15 minutes. That challenge turned into this project, and yes, we actually pulled it off.
+
 ## Play Online
 
 Play the current GitHub Pages build here:
@@ -28,6 +30,14 @@ Play the current GitHub Pages build here:
 </table>
 
 Click either preview to expand it, and click again to collapse it.
+
+## Story
+
+This tribute started as a fast creative sprint with a very specific goal: take the feeling of classic arcade Arkanoid and rebuild it as a complete playable browser version in one short AI-assisted session. Instead of stopping at a prototype, the project kept growing into a proper mini-arcade release with a title video, soundtrack support, gameplay polish, multiple stages, and a Doh-inspired finale.
+
+## About The Original
+
+The original *Arkanoid* was released by Taito in 1986 and became one of the defining brick-breaker arcade games. It took the older paddle-and-ball formula popularized by *Breakout* and gave it a stronger arcade identity through the Vaus paddle, power-ups, stage-based layouts, and a memorable sci-fi presentation. Its sequel, *Arkanoid: Revenge of Doh*, pushed that formula further with more elaborate stages, enemies, and boss-style encounters, which is the main inspiration behind this tribute.
 
 ## Highlights
 
