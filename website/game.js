@@ -864,6 +864,7 @@ class Game {
     this.soundToggleButton = document.getElementById("sound-toggle");
     this.fullscreenToggleButton = document.getElementById("fullscreen-toggle");
     this.playfieldWrap = document.querySelector(".playfield-wrap");
+    this.playfieldStage = document.querySelector(".playfield-stage");
     this.titleVideo = titleVideo;
     this.titleStartOverlay = titleStartOverlay;
     this.titleVideoReady = !!(this.titleVideo && this.titleVideo.readyState >= 2);
@@ -1046,12 +1047,20 @@ class Game {
         event.stopPropagation();
         await this.toggleFullscreen();
       });
-      document.addEventListener("fullscreenchange", () => this.updateFullscreenToggle());
-      document.addEventListener("webkitfullscreenchange", () => this.updateFullscreenToggle());
+      document.addEventListener("fullscreenchange", () => {
+        this.updateFullscreenToggle();
+        this.syncFullscreenStageSize();
+      });
+      document.addEventListener("webkitfullscreenchange", () => {
+        this.updateFullscreenToggle();
+        this.syncFullscreenStageSize();
+      });
+      window.addEventListener("resize", () => this.syncFullscreenStageSize());
     }
 
     this.updateSoundToggle();
     this.updateFullscreenToggle();
+    this.syncFullscreenStageSize();
   }
 
   bindTitleVideo() {
@@ -1154,6 +1163,7 @@ class Game {
     } else if (this.playfieldWrap.webkitRequestFullscreen) {
       this.playfieldWrap.webkitRequestFullscreen();
     }
+    this.syncFullscreenStageSize();
   }
 
   updateFullscreenToggle() {
@@ -1168,6 +1178,31 @@ class Game {
       "title",
       active ? "Exit fullscreen mode" : "Enter fullscreen mode",
     );
+  }
+
+  syncFullscreenStageSize() {
+    if (!this.playfieldStage) return;
+    if (!this.isFullscreenActive()) {
+      this.playfieldStage.style.width = "";
+      this.playfieldStage.style.height = "";
+      return;
+    }
+
+    const padding = 48;
+    const aspect = WIDTH / HEIGHT;
+    const availableWidth = Math.max(320, window.innerWidth - padding);
+    const availableHeight = Math.max(240, window.innerHeight - padding);
+
+    let stageWidth = availableWidth;
+    let stageHeight = stageWidth / aspect;
+
+    if (stageHeight > availableHeight) {
+      stageHeight = availableHeight;
+      stageWidth = stageHeight * aspect;
+    }
+
+    this.playfieldStage.style.width = `${Math.floor(stageWidth)}px`;
+    this.playfieldStage.style.height = `${Math.floor(stageHeight)}px`;
   }
 
   registerActivity() {

@@ -441,9 +441,9 @@ h1 {
 }
 
 .playfield-wrap:fullscreen .playfield-stage {
-  width: min(calc((100vh - 48px) * 4 / 3), calc(100vw - 48px));
-  max-width: 100%;
-  max-height: calc(100vh - 48px);
+  flex: 0 0 auto;
+  max-width: none;
+  max-height: none;
 }
 
 .playfield-wrap:-webkit-full-screen {
@@ -460,9 +460,9 @@ h1 {
 }
 
 .playfield-wrap:-webkit-full-screen .playfield-stage {
-  width: min(calc((100vh - 48px) * 4 / 3), calc(100vw - 48px));
-  max-width: 100%;
-  max-height: calc(100vh - 48px);
+  flex: 0 0 auto;
+  max-width: none;
+  max-height: none;
 }
 
 @media (max-width: 900px) {
