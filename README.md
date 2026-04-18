@@ -2,7 +2,7 @@
 
 A browser-based Arkanoid tribute project with custom arcade presentation, title video support, soundtrack playback, multiple stages, a Doh-style boss, and local project rules tracked in [`AGENTS.md`](./AGENTS.md).
 
-Tom was an avid Arkanoid fan in the arcade days, and with modern AI tools in reach, he set himself a fun challenge: create a fully working Arkanoid tribute with multiple levels, a title screen, music, and real playable flow in about 15 minutes. That challenge turned into this project, and yes, we actually pulled it off.
+SlimShady was an avid Arkanoid fan in the arcade days, and with modern AI tools in reach, he set himself a fun challenge: create a fully working Arkanoid tribute with multiple levels, a title screen, music, and real playable flow in about 15 minutes. That challenge turned into this project, and yes, we actually pulled it off.
 
 ## Play Online
 
