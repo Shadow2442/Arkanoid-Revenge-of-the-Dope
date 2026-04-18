@@ -862,6 +862,8 @@ class Game {
   constructor() {
     this.audio = new AudioSystem();
     this.soundToggleButton = document.getElementById("sound-toggle");
+    this.fullscreenToggleButton = document.getElementById("fullscreen-toggle");
+    this.playfieldWrap = document.querySelector(".playfield-wrap");
     this.titleVideo = titleVideo;
     this.titleStartOverlay = titleStartOverlay;
     this.titleVideoReady = !!(this.titleVideo && this.titleVideo.readyState >= 2);
@@ -1024,19 +1026,32 @@ class Game {
   }
 
   bindUi() {
-    if (!this.soundToggleButton) return;
-    this.soundToggleButton.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      const nextEnabled = !this.audio.musicEnabled;
-      this.audio.unlock();
-      this.audio.setMusicEnabled(nextEnabled);
-      if (nextEnabled) {
-        this.audio.syncMusic("title");
-      }
-      this.updateSoundToggle();
-    });
+    if (this.soundToggleButton) {
+      this.soundToggleButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const nextEnabled = !this.audio.musicEnabled;
+        this.audio.unlock();
+        this.audio.setMusicEnabled(nextEnabled);
+        if (nextEnabled) {
+          this.audio.syncMusic("title");
+        }
+        this.updateSoundToggle();
+      });
+    }
+
+    if (this.fullscreenToggleButton) {
+      this.fullscreenToggleButton.addEventListener("click", async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        await this.toggleFullscreen();
+      });
+      document.addEventListener("fullscreenchange", () => this.updateFullscreenToggle());
+      document.addEventListener("webkitfullscreenchange", () => this.updateFullscreenToggle());
+    }
+
     this.updateSoundToggle();
+    this.updateFullscreenToggle();
   }
 
   bindTitleVideo() {
@@ -1113,6 +1128,46 @@ class Game {
     this.soundToggleButton.textContent = on ? "🔊" : "🔇";
     this.soundToggleButton.setAttribute("aria-label", on ? "Sound on" : "Sound off");
     this.soundToggleButton.classList.toggle("sound-on", on);
+  }
+
+  isFullscreenActive() {
+    if (!this.playfieldWrap) return false;
+    return (
+      document.fullscreenElement === this.playfieldWrap ||
+      document.webkitFullscreenElement === this.playfieldWrap
+    );
+  }
+
+  async toggleFullscreen() {
+    if (!this.playfieldWrap) return;
+    if (this.isFullscreenActive()) {
+      if (document.exitFullscreen) {
+        await document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+      return;
+    }
+
+    if (this.playfieldWrap.requestFullscreen) {
+      await this.playfieldWrap.requestFullscreen();
+    } else if (this.playfieldWrap.webkitRequestFullscreen) {
+      this.playfieldWrap.webkitRequestFullscreen();
+    }
+  }
+
+  updateFullscreenToggle() {
+    if (!this.fullscreenToggleButton) return;
+    const active = this.isFullscreenActive();
+    this.fullscreenToggleButton.textContent = active ? "Exit Fullscreen" : "Fullscreen Mode";
+    this.fullscreenToggleButton.setAttribute(
+      "aria-label",
+      active ? "Exit fullscreen mode" : "Enter fullscreen mode",
+    );
+    this.fullscreenToggleButton.setAttribute(
+      "title",
+      active ? "Exit fullscreen mode" : "Enter fullscreen mode",
+    );
   }
 
   registerActivity() {

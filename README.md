@@ -47,6 +47,15 @@ The original *Arkanoid* was released by Taito in 1986 and became one of the defi
 - Mouse and keyboard controls
 - GitHub Pages deployment from the `website/` folder via Actions
 
+## Power-Ups
+
+- `E`: Expand Vaus for more forgiving returns
+- `S`: Slow the ball down when the round gets too spicy
+- `C`: Catch the ball and auto-release it after a short hold
+- `L`: Enable laser fire, including left-click autofire support
+- `D`: Trigger multiball chaos
+- `P`: Add an extra life
+
 ## Controls
 
 - `A` / `D` or `Left` / `Right`: move Vaus
@@ -83,6 +92,14 @@ If you want a quick local launcher in Chrome, use:
   - [https://shadow2442.github.io/Arkanoid-Revenge-of-the-Dope/](https://shadow2442.github.io/Arkanoid-Revenge-of-the-Dope/)
 - The live build files are published from the `website/` folder through GitHub Actions
 - Before future publishing changes, verify asset paths, audio/video references, and title-screen behavior
+
+## Roadmap
+
+- Tighten sprite art and enemy visuals even closer to the arcade original
+- Add more stage layouts and alternate boss patterns
+- Refine audio balancing between soundtrack, effects, and title presentation
+- Add lightweight smoke checks for the web build on future pushes
+- Package follow-up releases with version notes and gameplay highlights
 
 ## Current Runtime Assets
 

@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Play the live build
+    url: https://shadow2442.github.io/Arkanoid-Revenge-of-the-Dope/
+    about: Check the latest playable GitHub Pages version before filing an issue.
