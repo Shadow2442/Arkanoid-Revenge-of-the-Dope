@@ -10,7 +10,24 @@ Play the current GitHub Pages build here:
 
 ## Preview
 
-![Arkanoid: Revenge of the Dope preview](./website/assets/readme/title-preview.gif)
+<table>
+  <tr>
+    <td align="center" valign="top">
+      <details>
+        <summary><img src="./website/assets/readme/title-preview.gif" alt="Title screen preview" width="360" /></summary>
+        <img src="./website/assets/readme/title-preview.gif" alt="Title screen preview" width="720" />
+      </details>
+    </td>
+    <td align="center" valign="top">
+      <details>
+        <summary><img src="./website/assets/readme/gameplay-preview.png" alt="Gameplay preview" width="360" /></summary>
+        <img src="./website/assets/readme/gameplay-preview.png" alt="Gameplay preview" width="720" />
+      </details>
+    </td>
+  </tr>
+</table>
+
+Click either preview to expand it, and click again to collapse it.
 
 ## Highlights
 
@@ -64,6 +81,7 @@ If you want a quick local launcher in Chrome, use:
 - Styles: `website/styles.css`
 - Title video: `website/assets/video/title-screen.mp4`
 - README preview GIF: `website/assets/readme/title-preview.gif`
+- README gameplay screenshot: `website/assets/readme/gameplay-preview.png`
 - Music: `website/soundtrack/`
 
 ## License
