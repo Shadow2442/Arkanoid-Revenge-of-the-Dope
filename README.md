@@ -1,8 +1,8 @@
 # Arkanoid: Revenge of the Dope
 
-A browser-based Arkanoid tribute project with custom arcade presentation, title video support, soundtrack playback, multiple stages, a Doh-style boss, and local project rules tracked in [`AGENTS.md`](./AGENTS.md).
+A browser-based Arkanoid tribute built as a lightweight, fully playable JavaScript game with arcade-faithful presentation, title video support, soundtrack playback, multiple stages, a Doh-style boss, and local project rules tracked in [`AGENTS.md`](./AGENTS.md).
 
-SlimShady was an avid Arkanoid fan in the arcade days, and with modern AI tools in reach, he set himself a fun challenge: create a fully working Arkanoid tribute with multiple levels, a title screen, music, and real playable flow in about 15 minutes. That challenge turned into this project, and yes, we actually pulled it off.
+SlimShady was an avid Arkanoid fan in the arcade days, and with modern AI tools in reach, he set himself a fun challenge: build a lightweight but fully working JavaScript Arkanoid tribute with multiple levels, a title screen, music, and gameplay that looked and felt as close to the original arcade experience as possible, all in about 15 minutes. That challenge turned into this project, and yes, we actually pulled it off.
 
 ## Play Online
 
@@ -33,7 +33,7 @@ Click either preview to expand it, and click again to collapse it.
 
 ## Story
 
-This tribute started as a fast creative sprint with a very specific goal: take the feeling of classic arcade Arkanoid and rebuild it as a complete playable browser version in one short AI-assisted session. Instead of stopping at a prototype, the project kept growing into a proper mini-arcade release with a title video, soundtrack support, gameplay polish, multiple stages, and a Doh-inspired finale.
+This tribute started as a fast creative sprint with a very specific goal: build a lightweight, fully playable JavaScript version of Arkanoid that captured as much of the original arcade look and feel as possible in one short AI-assisted session. The point was never to fake the experience with a graphics-heavy mock-up, but to ship a real browser game with proper controls, power-ups, stages, music, and game flow. Instead of stopping at a prototype, the project kept growing into a proper mini-arcade release with a title video, soundtrack support, gameplay polish, multiple stages, and a Doh-inspired finale.
 
 ## About The Original
 
