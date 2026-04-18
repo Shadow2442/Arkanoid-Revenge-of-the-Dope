@@ -8,6 +8,10 @@ Play the current GitHub Pages build here:
 
 [Play Arkanoid: Revenge of the Dope](https://shadow2442.github.io/Arkanoid-Revenge-of-the-Dope/)
 
+## Preview
+
+![Arkanoid: Revenge of the Dope preview](./website/assets/readme/title-preview.gif)
+
 ## Highlights
 
 - Playable browser build with arcade-style presentation
@@ -15,6 +19,16 @@ Play the current GitHub Pages build here:
 - Custom title video, soundtrack support, and retro UI effects
 - Mouse and keyboard controls
 - GitHub Pages deployment from the `website/` folder via Actions
+
+## Controls
+
+- `A` / `D` or `Left` / `Right`: move Vaus
+- `Space` / `Enter`: launch ball and confirm menu choices
+- `Left Click`: start game from title screen
+- `Left Click` during laser power-up: fire lasers / hold for autofire
+- `F`: fire lasers during laser power-up
+- `P`: pause and resume
+- `Esc`: open the return-to-title confirmation prompt
 
 ## Project Structure
 
@@ -49,7 +63,14 @@ If you want a quick local launcher in Chrome, use:
 - Main page: `website/index.html`
 - Styles: `website/styles.css`
 - Title video: `website/assets/video/title-screen.mp4`
+- README preview GIF: `website/assets/readme/title-preview.gif`
 - Music: `website/soundtrack/`
+
+## License
+
+This project is released under [The Unlicense](./LICENSE).
+
+That means anyone can use it, modify it, distribute it, remix it, and include it in other work with essentially no restrictions.
 
 ## Development Notes
 
