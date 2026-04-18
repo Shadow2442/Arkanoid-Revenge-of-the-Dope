@@ -238,6 +238,35 @@ function circleRectCollision(ball, rect) {
   return dx * dx + dy * dy <= ball.radius * ball.radius;
 }
 
+function resolveBallRectBounce(ball, rect) {
+  const overlapLeft = Math.abs(ball.x + ball.radius - rect.x);
+  const overlapRight = Math.abs(ball.x - ball.radius - (rect.x + rect.width));
+  const overlapTop = Math.abs(ball.y + ball.radius - rect.y);
+  const overlapBottom = Math.abs(ball.y - ball.radius - (rect.y + rect.height));
+  const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
+  const epsilon = 0.5;
+
+  if (minOverlap === overlapLeft || minOverlap === overlapRight) {
+    if (overlapLeft < overlapRight) {
+      ball.x = rect.x - ball.radius - epsilon;
+      ball.vx = -Math.abs(ball.vx);
+    } else {
+      ball.x = rect.x + rect.width + ball.radius + epsilon;
+      ball.vx = Math.abs(ball.vx);
+    }
+    return "horizontal";
+  }
+
+  if (overlapTop < overlapBottom) {
+    ball.y = rect.y - ball.radius - epsilon;
+    ball.vy = -Math.abs(ball.vy);
+  } else {
+    ball.y = rect.y + rect.height + ball.radius + epsilon;
+    ball.vy = Math.abs(ball.vy);
+  }
+  return "vertical";
+}
+
 function fillRoundedRect(ctx, x, y, width, height, radius) {
   const r = Math.min(radius, width / 2, height / 2);
   ctx.beginPath();
@@ -1850,16 +1879,7 @@ class Game {
     if (demo.type === "level_preview") {
       for (const brick of [...demo.bricks]) {
         if (!circleRectCollision(ball, brick)) continue;
-        const overlapLeft = Math.abs(ball.x + ball.radius - brick.x);
-        const overlapRight = Math.abs(ball.x - ball.radius - (brick.x + brick.width));
-        const overlapTop = Math.abs(ball.y + ball.radius - brick.y);
-        const overlapBottom = Math.abs(ball.y - ball.radius - (brick.y + brick.height));
-        const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
-        if (minOverlap === overlapLeft || minOverlap === overlapRight) {
-          ball.vx *= -1;
-        } else {
-          ball.vy *= -1;
-        }
+        resolveBallRectBounce(ball, brick);
         if (brick.hit()) {
           demo.bricks = demo.bricks.filter((candidate) => candidate !== brick);
         }
@@ -1979,17 +1999,7 @@ class Game {
     for (const ball of this.balls) {
       for (const brick of this.bricks) {
         if (!circleRectCollision(ball, brick)) continue;
-
-        const overlapLeft = Math.abs(ball.x + ball.radius - brick.x);
-        const overlapRight = Math.abs(ball.x - ball.radius - (brick.x + brick.width));
-        const overlapTop = Math.abs(ball.y + ball.radius - brick.y);
-        const overlapBottom = Math.abs(ball.y - ball.radius - (brick.y + brick.height));
-        const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
-        if (minOverlap === overlapLeft || minOverlap === overlapRight) {
-          ball.vx *= -1;
-        } else {
-          ball.vy *= -1;
-        }
+        resolveBallRectBounce(ball, brick);
 
         if (brick.hit()) {
           this.score += brick.score;
