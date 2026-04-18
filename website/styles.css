@@ -71,6 +71,15 @@ body {
   position: relative;
 }
 
+.topbar-actions {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .eyebrow {
   margin: 0 0 6px;
   font-size: 12px;
@@ -114,10 +123,31 @@ h1 {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.repo-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(7, 13, 35, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #c2cffd;
+  text-decoration: none;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: background 120ms ease, color 120ms ease, box-shadow 120ms ease;
+}
+
+.repo-link:hover,
+.repo-link:focus-visible {
+  color: #ffffff;
+  background: rgba(18, 27, 68, 0.95);
+  box-shadow: 0 0 16px rgba(95, 244, 255, 0.18);
+  outline: none;
+}
+
 .sound-toggle {
-  position: absolute;
-  top: 4px;
-  right: 4px;
   width: 46px;
   height: 46px;
   border: 1px solid rgba(255, 255, 255, 0.14);
@@ -243,6 +273,14 @@ canvas {
 }
 
 @media (max-width: 900px) {
+  .topbar-actions {
+    position: static;
+    margin-top: 14px;
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
   .status-bar {
     flex-direction: column;
     align-items: flex-start;
