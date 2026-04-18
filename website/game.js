@@ -291,6 +291,7 @@ class AudioSystem {
       "./soundtrack/arkanoid (2).mp3",
       "./soundtrack/arkanoid (3).mp3",
       "./soundtrack/arkanoid (4).mp3",
+      "./soundtrack/arkanoid (5).mp3",
     ];
     this.lastGameplayTrackPath = null;
   }
