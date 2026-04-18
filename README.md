@@ -10,6 +10,8 @@ Play the current GitHub Pages build here:
 
 [Play Arkanoid: Revenge of the Dope](https://shadow2442.github.io/Arkanoid-Revenge-of-the-Dope/)
 
+Version notes live in [CHANGELOG.md](./CHANGELOG.md).
+
 ## Preview
 
 <table>
